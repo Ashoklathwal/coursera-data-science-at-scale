@@ -19,6 +19,7 @@ def main():
             text = data.get('text', None)
             lang = data.get('lang', None)
 
+            tweets_unknown_words = []
             if text and lang and lang == 'en':
                 words = text.split(' ')
                 tweet_score = 0
@@ -26,16 +27,16 @@ def main():
                     if word in scores:
                         tweet_score += scores[word]
                     else:
-                        print 'yo', word
-                        if word in unknown_words:
-                            unknown_words[word] += 1
-                        else:
-                            unknown_words[word] = 0
-                #print tweet_score
+                        tweets_unknown_words.append(word)
 
-    #for word in unknown_words:
-        #print word
-        #print word, score
+            for unknown_word in tweets_unknown_words:
+                if unknown_word in unknown_words:
+                    unknown_words[unknown_word] += tweet_score
+                else:
+                    unknown_words[unknown_word] = tweet_score
+
+    for word, score in unknown_words.iteritems():
+        print word, score
 
 
 if __name__ == '__main__':

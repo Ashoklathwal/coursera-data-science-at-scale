@@ -11,23 +11,29 @@ def main():
             data = json.loads(row)
             #print data
 
-            text = data.get('text', None)
-            lang = data.get('lang', None)
+            if not 'lang' in data: continue
+            if not 'text' in data: continue
+
+            lang = data[u'lang']
+            text = data[u'text']
 
             tweets_unknown_words = []
-            if text and lang and lang == 'en':
-                words = text.split(' ')
+            words = text.split(' ')
 
-                for word in words:
-                    num_terms += 1
-                    if word in term_frequencies:
-                        term_frequencies[word] += 1
-                    else:
-                        term_frequencies[word] = 0
+            for word in words:
+                #print words
+                word = word.encode('utf-8')
+                word = word.strip()
+                if len(word) == 0: continue
+
+                num_terms += 1
+                if word in term_frequencies:
+                    term_frequencies[word] += 1
+                else:
+                    term_frequencies[word] = 0
 
     for word, freq in term_frequencies.iteritems():
         print word, freq / num_terms
-
 
 if __name__ == '__main__':
     main()
